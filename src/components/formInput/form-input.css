@@ -1,0 +1,42 @@
+.form-input {
+    margin: 1.25rem 0rem;
+}
+
+.form-input > input {
+    display: block;
+    width: 100%;
+    font-family: inherit;
+    padding: 1.25rem;
+    font-size: 0.75rem;
+    color: #787878;
+    -webkit-border-radius: 16px;
+    -moz-border-radius: 16px;
+    border-radius: 16px;
+    background-clip: padding-box;
+    border: none;
+    background: rgba(240, 237, 255, 0.8);
+
+}
+
+.form-input > input:focus {
+    outline: none;
+    -webkit-box-shadow: 0px 0px 4px 0px rgba(145,129,244,1);
+    -moz-box-shadow: 0px 0px 4px 0px rgba(145,129,244,1);
+    box-shadow: 0px 0px 4px 0px rgba(145,129,244,1);
+}
+
+.form-input > label {
+    font-size: 1rem;
+}
+
+.form-input > label.hidden {
+    display: none;
+}
+
+.form-input > .error {
+    font-size: 13px;
+    color: red;
+    margin: 0rem  0rem 0.938rem 0rem;
+    padding: 0.313rem;
+    /* display: none; */
+}
