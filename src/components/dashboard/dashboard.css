@@ -1,0 +1,15 @@
+.dashboard-container {
+    max-width: 800px;
+    padding: 0.938rem;
+    width: 100%;
+    background-color: #ffffff;
+    -webkit-border-radius: 20px;
+    -moz-border-radius: 20px;
+    border-radius: 20px;
+}
+
+@media (min-width: 768px) {
+    .dashboard-container {
+        padding: 3.125rem;
+    }
+}

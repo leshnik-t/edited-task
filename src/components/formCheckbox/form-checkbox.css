@@ -1,0 +1,18 @@
+.form-checkbox {
+    font-size: 1rem;
+    margin: 0.938rem 0rem;
+}
+
+.form-checkbox > label {
+    position: relative;
+    padding-left: 20px;
+    color: #343A40;
+    cursor: pointer;
+}
+
+.form-checkbox > label > input {
+    position: absolute;
+    left: 0px;
+    margin: 5px 0px 0px 0px;
+}
+
