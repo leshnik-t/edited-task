@@ -23,7 +23,10 @@ const LoginForm = () => {
     const [validationErrors, setValidationErrors] = useState({
         username: false,
         password: false
-    })
+    });
+
+    const [loading, setLoading] = useState(false);
+    const [authError, setAuthError] = useState(null);
     
     const onBlur = (e) => {
         switch(true) {
@@ -68,7 +71,17 @@ const LoginForm = () => {
         }
     }
 
-    const handleSubmit = (event) => {
+    const loginUser = async (username, password) => {
+        return fetch('/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({username, password})
+        })
+    }
+
+    const handleSubmit = async (event) => {
         event.preventDefault();
 
         const isValidEmailCurrentUsername = isValidEmail(values.username);
@@ -80,28 +93,52 @@ const LoginForm = () => {
         });
 
         if (isValidEmailCurrentUsername && isValidPasswordCurrentPassword) {
-            console.log('make login');
-            //dispatch login
-            dispatch({
-                type: 'login', 
-                payload: values.username
-            });
+            
+            setLoading(true);
+            setAuthError(null);
 
-            // if success login set localStorage()
-            if (values.rememberme) {
-                const data = {
-                    username: values.username
+            let response;
+            try {
+                response = await loginUser(
+                    values.username,
+                    values.password
+                ); 
+            } catch(error) {
+                setAuthError('Something went wrong. Please, try again later');
+                return;
+            } finally {
+                setLoading(false);
+            }
+
+            switch(true) {
+                case (response.ok === true): {
+                    dispatch({
+                        type: 'login', 
+                        payload: values.username
+                    });
+        
+                    // if success login set localStorage()
+                    if (values.rememberme) {
+                        const data = {
+                            username: values.username
+                        }
+                        localStorage.setItem('userPreferences', JSON.stringify(data));
+                    } else {
+                        const data = {
+                            username: ''
+                        }
+                        localStorage.removeItem('userPreferences', JSON.stringify(data));
+                    }
+                    break;
                 }
-                localStorage.setItem('userPreferences', JSON.stringify(data));
-            } else {
-                const data = {
-                    username: ''
+                case (response.status === 401): {
+                    setAuthError('Wrong username or password!')
+                    break;
                 }
-                localStorage.removeItem('userPreferences', JSON.stringify(data));
+                default:
+                    break;
             }
         } 
-
-
     };
     
     return (
@@ -130,6 +167,12 @@ const LoginForm = () => {
                     />
                     <Button tabIndex="4" type="submit" text="Login Now"/>
                 </form>
+                {loading &&
+                    <p className="message">Checking your username na password</p>
+                }
+                {authError &&
+                    <p className="message error">{authError}</p>
+                }
             </div>
         </div>
     )

@@ -23,6 +23,25 @@
     padding: 0.938rem 0rem;
 }
 
+.message {
+    margin: 0.938rem 0rem;
+    padding: 0.938rem;
+    text-align: center;
+    font-size: 0.938rem;
+    color: inherit;
+    border: 1px solid #e9ecef;
+    background-color: #fcfcfd;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    border-radius: 10px;
+}
+
+.message.error {
+    color: #58151c;
+    background-color: #f8d7da;
+    border-color: #f1aeb5;
+}
+
 @media (min-width:768px) {
     .login-form {
         padding: 3.438rem 2.813rem 2rem 2.813rem;
