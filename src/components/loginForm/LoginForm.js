@@ -5,6 +5,8 @@ import { Navigate } from 'react-router-dom';
 import FormInput from '../formInput/FormInput';
 import FormCheckbox from '../formCheckbox/FormCheckbox';
 import Button from '../button/Button';
+import { isValidEmail, isValidPassword} from '../../helpers/validationRules';
+import { inputs, checkbox } from '../../configuration/loginFormConfig';
 
 
 const LoginForm = () => {
@@ -18,31 +20,23 @@ const LoginForm = () => {
         rememberme: (JSON.parse(localStorage.getItem('userPreferences')) != null && JSON.parse(localStorage.getItem('userPreferences'))['username']) ? true : false
     });
 
-    const [errors, setErrors] = useState({
+    const [validationErrors, setValidationErrors] = useState({
         username: false,
         password: false
     })
-
-    const isValidEmail = (email) => {
-        return /\S+@\S+\.\S+/.test(email);
-    }
-    
-    const isValidPassword = (password) => {
-        return /^(?=.*[0-9])(?=.*[a-zA-Z])[a-zA-Z0-9!@#$%^&*]{6,}$/.test(password);
-    }
     
     const onBlur = (e) => {
         switch(true) {
             case (e.target.name === 'username'): {
-                 setErrors({
-                    ...errors,
+                 setValidationErrors({
+                    ...validationErrors,
                     [e.target.name]: !isValidEmail(e.target.value)
                 })
                 break;
             }
             case (e.target.name === 'password'): {
-                setErrors({
-                    ...errors,
+                setValidationErrors({
+                    ...validationErrors,
                     [e.target.name]: !isValidPassword(e.target.value)
                 })
                 break;
@@ -50,40 +44,6 @@ const LoginForm = () => {
             default:
                 break;
         }
-    }
-
-    const inputs = [
-        {
-            id: 'input-1',
-            name: 'username',
-            type: 'email',
-            tabIndex: '1',
-            placeholder: 'Username',
-            label: 'Username',
-            label_htmlFor: 'username',
-            errorMessage: "Should be a valid email address",
-            // required: true,
-            autoFocus: true
-        },
-        {
-            id: 'input-2',
-            name: 'password',
-            type: 'password',
-            tabIndex: '2',
-            placeholder: 'Password',
-            label: 'Password',
-            label_htmlFor: 'password',
-            errorMessage: "Password should be minimum 6 characters and should include one digit and one letter",
-            // required: true
-        }
-    ];
-
-    const checkbox = {
-        id: 'checkbox-1',
-        name: 'rememberme',
-        type: 'checkbox',
-        tabIndex: '3',
-        label: 'Remember me'
     }
 
     const onChange = (e) => {
@@ -110,14 +70,11 @@ const LoginForm = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        console.log("btn hitted");
-        console.log("valid email", isValidEmail(values.username));
-        console.log("valid password", isValidPassword(values.password));
 
         const isValidEmailCurrentUsername = isValidEmail(values.username);
         const isValidPasswordCurrentPassword = isValidPassword(values.password);
 
-        setErrors({
+        setValidationErrors({
             username: !isValidEmailCurrentUsername,
             password: !isValidPasswordCurrentPassword
         });
@@ -130,7 +87,7 @@ const LoginForm = () => {
                 payload: values.username
             });
 
-            // if success login setLocalStorageData()
+            // if success login set localStorage()
             if (values.rememberme) {
                 const data = {
                     username: values.username
@@ -163,7 +120,7 @@ const LoginForm = () => {
                             value={values[input.name]}
                             onChange={onChange}
                             onBlur={onBlur}
-                            showError={errors[input.name]}
+                            showError={validationErrors[input.name]}
                         />
                     ))}
                     <FormCheckbox
